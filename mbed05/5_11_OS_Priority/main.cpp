@@ -41,5 +41,5 @@ int main() {
   // button fall still runs in the ISR
   btn.fall(&btn_fall_irq);
 
-  while (1) {}
+  while (1) {wait(1);}
 }

@@ -4,6 +4,8 @@ Serial pc( USBTX, USBRX );
 AnalogOut Aout(DAC0_OUT);
 AnalogIn Ain(A0);
 DigitalIn  Switch(SW3);
+DigitalOut redLED(LED1);
+DigitalOut greenLED(LED2);
 
 BusOut display(D6, D7, D9, D10, D11, D5, D4, D8);
 
@@ -16,6 +18,8 @@ float ADCdata[1001];
 
 int main(){
   int count = 0;
+ redLED = 0;
+  greenLED = 1;
   for (i = 1; i < sample; i++){
     Aout = Ain;
     ADCdata[i] = Ain;
@@ -39,6 +43,8 @@ int main(){
 
   while(1){
     if( Switch == 0 ){
+        redLED = 1;
+        greenLED = 0;
         display = table[(count / 100) % 10];
         wait(1.0);
         display = table[(count / 10) % 10];
@@ -48,6 +54,8 @@ int main(){
     }
     if( Switch == 1 ){
         display  = 0x00;
+        redLED = 0;
+        greenLED = 1;
         for( j=0; j<2; j+=0.05 ){
             Aout = 0.5 + 0.5*sin(j*3.14159);
             wait(1./count/40);
