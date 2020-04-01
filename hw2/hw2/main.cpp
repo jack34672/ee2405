@@ -40,6 +40,7 @@ int main(){
   count = count - count/100*7 ;
 
     float j;
+    int last;
 
   while(1){
     if( Switch == 0 ){
@@ -49,7 +50,8 @@ int main(){
         wait(1.0);
         display = table[(count / 10) % 10];
         wait(1.0);
-        display = table[count % 10];
+        last = table[count % 10];
+        display = last + 0x80;
         wait(1.0);
     }
     if( Switch == 1 ){
