@@ -8,30 +8,30 @@ PwmOut PWM1(D6);
 AnalogIn Ain(A0);
 Serial pc( USBTX, USBRX );
 float ADCdata[128];
+AnalogOut Aout(DAC0_OUT);
 
 int sample = 128;
 
 
 int main()
 {
-
-        PWM1.period(0.001);
         
         int i;
-        float j = 0;
+        float j = 0.0;
         float k = 0.1;
 
         for(i = 0; i < sample; i ++){
             PWM1 = j;
             ADCdata[i] = PWM1;
+            Aout = PWM1;
             j = j + k;
-            if(j == 1 ){
-                k = -0.1;
+            if(j == 1.0 ){
+                k = -k;
             }
-            if(j == 0 ){
-                k = 1;
+            if(j == 0.0 ){
+                k = -k;
             }
-            wait(1./sample);
+            wait(0.001);
         }
 
         for (i = 0; i < sample; i++){
