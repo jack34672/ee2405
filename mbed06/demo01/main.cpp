@@ -83,13 +83,12 @@ int main() {
       b = t[1] * 1000;
       c = t[2] * 1000;
 
-      display_to_LCD(0x30 + a/1000);           // ‘H’
       display_to_LCD(0x2E);           // ‘.’
       display_to_LCD(0x30 + (a/100)%10);           // ‘H’
       display_to_LCD(0x30 + (a/10)%10);           // ‘H’
       display_to_LCD(0x30 + (a%10));           // ‘H’
-      
-      display_to_LCD(0x20);           // ‘X’
+
+      display_to_LCD(0x20);           // ‘ ’
 
       display_to_LCD(0x30 + b/1000);           // ‘H’
       display_to_LCD(0x2E);           // ‘.’
@@ -97,7 +96,7 @@ int main() {
       display_to_LCD(0x30 + (b/10)%10);           // ‘H’
       display_to_LCD(0x30 + (b%10));           // ‘H’
 
-      display_to_LCD(0x20);           // ‘X’
+      display_to_LCD(0x20);           // ‘ ’
 
       display_to_LCD(0x30 + c/1000);           // ‘H’
       display_to_LCD(0x2E);           // ‘.’
