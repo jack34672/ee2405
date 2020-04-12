@@ -29,17 +29,14 @@ int m_addr = FXOS8700CQ_SLAVE_ADDR1;
 void FXOS8700CQ_readRegs(int addr, uint8_t * data, int len);
 void FXOS8700CQ_writeRegs(uint8_t * data, int len);
 
-DigitalOut led1(LED1);
 DigitalOut led2(LED2);
 
 InterruptIn sw2(SW2);
 EventQueue queue;
 EventQueue queueled;
-EventQueue queuelog;
 
 Thread thred;
 Thread thred2;
-Thread thred3;
 
 int first = 1;
 float orig_z;
@@ -113,12 +110,10 @@ int main() {
    pc.baud(115200);
 
 
-    led1 = 1;
     led2 = 1;
 
     thred.start(callback(&queue, &EventQueue::dispatch_forever));
     thred2.start(callback(&queueled, &EventQueue::dispatch_forever));
-    thred3.start(callback(&queuelog, &EventQueue::dispatch_forever));
 
     sw2.rise(queue.event(startLog));
 }
