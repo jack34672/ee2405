@@ -88,6 +88,7 @@ bool ReadAccelerometer(tflite::ErrorReporter* error_reporter, float* input,
     z = ((float)acc16) / 4096.0f;
 
     sample_skip_counter += 1;
+    
   }
 
   // Write samples to our buffer, converting to milli-Gs
