@@ -5,7 +5,7 @@
             ".text": 34323,
             ".data": 473,
             ".bss": 6762,
-            ".text-delta": 0,
+            ".text-delta": -47,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -16,9 +16,9 @@
             ".text": 41822,
             ".data": 229,
             ".bss": 2906,
-            ".text-delta": 668,
-            ".data-delta": 32,
-            ".bss-delta": 160
+            ".text-delta": 0,
+            ".data-delta": 0,
+            ".bss-delta": 0
         }
     },
     {
@@ -27,7 +27,7 @@
             ".text": 274,
             ".data": 13,
             ".bss": 31,
-            ".text-delta": 4,
+            ".text-delta": 7,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -38,7 +38,7 @@
             ".text": 34599,
             ".data": 2472,
             ".bss": 89,
-            ".text-delta": 0,
+            ".text-delta": -40,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -101,9 +101,9 @@
     {
         "summary": {
             "static_ram": 13024,
-            "static_ram_delta": 192,
+            "static_ram_delta": 0,
             "total_flash": 120331,
-            "total_flash_delta": 704
+            "total_flash_delta": -80
         }
     }
 ]
