@@ -20,7 +20,7 @@ int PredictGesture(float* output) {
   // Find whichever output has a probability > 0.8 (they sum to 1)
   int this_predict = -1;
   for (int i = 0; i < label_num; i++) {
-    if (output[i] > 0.5) this_predict = i;
+    if (output[i] > 0.8) this_predict = i;
   }
 
   // No gesture was detected above the threshold
@@ -96,9 +96,9 @@ int main(int argc, char* argv[]) {
   micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_FULLY_CONNECTED,
                                tflite::ops::micro::Register_FULLY_CONNECTED());
   micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_SOFTMAX,
-                               tflite::ops::micro::Register_RESHAPE(), 1);
-  micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_RESHAPE,
                                tflite::ops::micro::Register_SOFTMAX());
+  micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_RESHAPE,
+                               tflite::ops::micro::Register_RESHAPE(),1);                             
 
   // Build an interpreter to run the model with
   static tflite::MicroInterpreter static_interpreter(

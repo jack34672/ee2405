@@ -1,6 +1,6 @@
 #include "mbed.h"
 #include <cmath>
-#include "DA7212.h"
+#include "DA7212/DA7212.h"
 
 DA7212 audio;
 int16_t waveform[kAudioTxBufferSize];
