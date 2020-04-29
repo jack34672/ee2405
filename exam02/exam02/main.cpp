@@ -40,6 +40,7 @@ Thread thred2;
 
 float last_x;
 float a = 0.0;
+float dis = 0.0;
 int first = 0;
 int seconds = 0;
 
@@ -82,14 +83,15 @@ void Trig_led2()  {
             last_x = t[0];
             first = 1;
         } else {
-            a = ((t[0] - last_x) *  0.01 * 9.8 * 100) / 2; // calculate the 位移 by (a - a') * 9.8 * 0.01 * 100 / 2
+            a = ((t[0] - last_x) *  0.01 * 9.8 * 1000) / 2; // calculate the 位移 by (a - a') * 9.8 * 0.01 * 100 / 2
+            dis = dis + a;                     // add the distance
             last_x = t[0];
         }
 
         pc.printf("%1.4f\r\n", t[0]);
         pc.printf("%1.4f\r\n", t[1]);
         pc.printf("%1.4f\r\n", t[2]);
-        if(( a >= 5.0 ) || (a <= -5.0))
+        if(( dis >= 5.0 ) || (dis <= -5.0))
             pc.printf("%d\r\n", 1);
         else
         {
