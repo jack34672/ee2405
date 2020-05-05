@@ -1,31 +1,6 @@
 BUILD/K66F/GCC_ARM-TFLITE/main.o: main.cpp \
- BUILD/K66F/GCC_ARM-TFLITE/mbed_config.h accelerometer_handler.h \
- tensorflowlite_mbed/tensorflow/lite/c/common.h \
- tensorflowlite_mbed/tensorflow/lite/micro/micro_error_reporter.h \
- tensorflowlite_mbed/tensorflow/lite/core/api/error_reporter.h \
- tensorflowlite_mbed/tensorflow/lite/micro/compatibility.h \
- tensorflowlite_mbed/tensorflow/lite/micro/debug_log.h \
- tensorflowlite_mbed/tensorflow/lite/micro/debug_log_numbers.h config.h \
- magic_wand_model_data.h \
- tensorflowlite_mbed/tensorflow/lite/micro/kernels/micro_ops.h \
- tensorflowlite_mbed/tensorflow/lite/micro/micro_interpreter.h \
- tensorflowlite_mbed/tensorflow/lite/core/api/op_resolver.h \
- tensorflowlite_mbed/tensorflow/lite/schema/schema_generated.h \
- tensorflowlite_mbed/third_party/flatbuffers/include/flatbuffers/flatbuffers.h \
- tensorflowlite_mbed/third_party/flatbuffers/include/flatbuffers/base.h \
- tensorflowlite_mbed/third_party/flatbuffers/include/flatbuffers/stl_emulation.h \
- tensorflowlite_mbed/tensorflow/lite/kernels/internal/tensor_ctypes.h \
- tensorflowlite_mbed/tensorflow/lite/kernels/internal/types.h \
- tensorflowlite_mbed/tensorflow/lite/kernels/internal/compatibility.h \
- tensorflowlite_mbed/tensorflow/lite/kernels/op_macros.h \
- tensorflowlite_mbed/tensorflow/lite/micro/micro_allocator.h \
- tensorflowlite_mbed/tensorflow/lite/core/api/flatbuffer_conversions.h \
- tensorflowlite_mbed/tensorflow/lite/micro/simple_memory_allocator.h \
- tensorflowlite_mbed/tensorflow/lite/type_to_tflitetype.h \
- tensorflowlite_mbed/tensorflow/lite/micro/micro_mutable_op_resolver.h \
- tensorflowlite_mbed/tensorflow/lite/version.h \
- tensorflowlite_mbed/tensorflow/core/public/version.h \
- 4DGL-uLCD-SE/uLCD_4DGL.h /home/jack34672/ee2405/mbed-os/mbed.h \
+ BUILD/K66F/GCC_ARM-TFLITE/mbed_config.h \
+ /home/jack34672/ee2405/mbed-os/mbed.h \
  /home/jack34672/ee2405/mbed-os/platform/mbed_version.h \
  /home/jack34672/ee2405/mbed-os/rtos/rtos.h \
  /home/jack34672/ee2405/mbed-os/rtos/mbed_rtos_storage.h \
@@ -263,4 +238,41 @@ BUILD/K66F/GCC_ARM-TFLITE/main.o: main.cpp \
  /home/jack34672/ee2405/mbed-os/platform/mbed_stats.h \
  /home/jack34672/ee2405/mbed-os/platform/Callback.h \
  /home/jack34672/ee2405/mbed-os/platform/FunctionPointer.h \
- /home/jack34672/ee2405/mbed-os/platform/ScopedLock.h
+ /home/jack34672/ee2405/mbed-os/platform/ScopedLock.h DA7212/DA7212.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/TARGET_FRDM/fsl_clock_config.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_common.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_dmamux.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_gpio.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_i2c.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_lmem_cache.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_port.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_sai.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_sai_edma.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_sai.h \
+ /home/jack34672/ee2405/mbed-os-build/targets/TARGET_Freescale/TARGET_MCUXpresso_MCUS/TARGET_K66F/drivers/fsl_edma.h \
+ accelerometer_handler.h tensorflowlite_mbed/tensorflow/lite/c/common.h \
+ tensorflowlite_mbed/tensorflow/lite/micro/micro_error_reporter.h \
+ tensorflowlite_mbed/tensorflow/lite/core/api/error_reporter.h \
+ tensorflowlite_mbed/tensorflow/lite/micro/compatibility.h \
+ tensorflowlite_mbed/tensorflow/lite/micro/debug_log.h \
+ tensorflowlite_mbed/tensorflow/lite/micro/debug_log_numbers.h config.h \
+ magic_wand_model_data.h \
+ tensorflowlite_mbed/tensorflow/lite/micro/kernels/micro_ops.h \
+ tensorflowlite_mbed/tensorflow/lite/micro/micro_interpreter.h \
+ tensorflowlite_mbed/tensorflow/lite/core/api/op_resolver.h \
+ tensorflowlite_mbed/tensorflow/lite/schema/schema_generated.h \
+ tensorflowlite_mbed/third_party/flatbuffers/include/flatbuffers/flatbuffers.h \
+ tensorflowlite_mbed/third_party/flatbuffers/include/flatbuffers/base.h \
+ tensorflowlite_mbed/third_party/flatbuffers/include/flatbuffers/stl_emulation.h \
+ tensorflowlite_mbed/tensorflow/lite/kernels/internal/tensor_ctypes.h \
+ tensorflowlite_mbed/tensorflow/lite/kernels/internal/types.h \
+ tensorflowlite_mbed/tensorflow/lite/kernels/internal/compatibility.h \
+ tensorflowlite_mbed/tensorflow/lite/kernels/op_macros.h \
+ tensorflowlite_mbed/tensorflow/lite/micro/micro_allocator.h \
+ tensorflowlite_mbed/tensorflow/lite/core/api/flatbuffer_conversions.h \
+ tensorflowlite_mbed/tensorflow/lite/micro/simple_memory_allocator.h \
+ tensorflowlite_mbed/tensorflow/lite/type_to_tflitetype.h \
+ tensorflowlite_mbed/tensorflow/lite/micro/micro_mutable_op_resolver.h \
+ tensorflowlite_mbed/tensorflow/lite/version.h \
+ tensorflowlite_mbed/tensorflow/core/public/version.h \
+ 4DGL-uLCD-SE/uLCD_4DGL.h

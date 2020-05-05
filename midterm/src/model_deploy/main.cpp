@@ -1,3 +1,7 @@
+#include "mbed.h"
+#include <cmath>
+#include "DA7212.h"
+
 #include "accelerometer_handler.h"
 #include "config.h"
 #include "magic_wand_model_data.h"
@@ -12,14 +16,24 @@
 
 #include "uLCD_4DGL.h"
 
+DA7212 audio;
+int16_t waveform[kAudioTxBufferSize];
+
 uLCD_4DGL uLCD(D1, D0, D2);
 InterruptIn button(SW2);
-
-
 
 int command = 0;
 int mode = 0;
 int song = 0;
+
+void playNote(int freq)
+{
+  for(int i = 0; i < kAudioTxBufferSize; i++)
+  {
+    waveform[i] = (int16_t) (sin((double)i * 2. * M_PI/(double) (kAudioSampleFrequency / freq)) * ((1<<16) - 1));
+  }
+  audio.spk.play(waveform, kAudioTxBufferSize);
+}
 
 // Return the result of the last prediction
 int PredictGesture(float* output) {
@@ -209,6 +223,19 @@ int main(int argc, char* argv[]) {
         song = gesture_index + 1;
         uLCD.cls();
         uLCD.printf("\nPlaying song #%d\n", gesture_index+1); //Default Green on black text
+        for(int i = 0; i < 42; i++)
+        {
+          int length = 1;
+          while(length--)
+          {
+            // the loop below will play the note for the duration of 1s
+            for(int j = 0; j < kAudioSampleFrequency / kAudioTxBufferSize; ++j)
+            {
+              playNote(330);
+            }
+            if(length < 1) wait(1.0);
+          }
+        }
       } else if (mode == 2) {
         if (gesture_index == 0) {
           uLCD.cls();
