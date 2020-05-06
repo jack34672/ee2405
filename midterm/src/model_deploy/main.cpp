@@ -18,21 +18,71 @@
 
 DA7212 audio;
 int16_t waveform[kAudioTxBufferSize];
+Serial pc(USBTX, USBRX);
+
+#define bufferLength (32)
 
 uLCD_4DGL uLCD(D1, D0, D2);
 InterruptIn button(SW2);
+DigitalOut redLED(LED1);
 
 int command = 0;
+int number = 0;
 int mode = 0;
 int song = 0;
+char serialInBuffer[bufferLength];
 
-void playNote(int freq)
+void playNote(float freq)
 {
-  for(int i = 0; i < kAudioTxBufferSize; i++)
+  float frequency =  freq;
+  //(int16_t) (freq[number])*((1<<16)-1) ;
+  for (int i = 0; i < kAudioTxBufferSize; i++)
   {
-    waveform[i] = (int16_t) (sin((double)i * 2. * M_PI/(double) (kAudioSampleFrequency / freq)) * ((1<<16) - 1));
+  waveform[i] = (int16_t) (sin((double)i * 2. * M_PI/(double) (kAudioSampleFrequency /( 500*frequency))) * ((1<<16) - 1));
   }
-  audio.spk.play(waveform, kAudioTxBufferSize);
+  // the loop below will play the note for the duration of 1s
+  for(int j = 0; j < kAudioSampleFrequency / kAudioTxBufferSize; ++j)
+  {
+    audio.spk.play(waveform, kAudioTxBufferSize);
+  }
+
+}
+
+int serialCount =0;
+float song_note[42];
+
+void ISR1(){
+    if (mode == 1){
+      mode = 3;
+    } else if (mode == 5){
+      mode = 6;
+    } else {
+      mode = 4;
+    }
+}
+
+void loadSignal(int leng)
+{
+  int i = 0;
+  serialCount = 0;
+  audio.spk.pause();
+  while(i < leng)
+  {
+    if(pc.readable())
+    {
+      serialInBuffer[serialCount] = pc.getc();
+      serialCount++;
+      if(serialCount == 5)
+      {
+        serialInBuffer[serialCount] = '\0';
+        song_note[i] = (float) atof(serialInBuffer);
+        serialCount = 0;
+        i++;
+        printf("%d", i);
+      }
+    }
+    button.rise(&ISR1);
+  }
 }
 
 // Return the result of the last prediction
@@ -75,15 +125,7 @@ int PredictGesture(float* output) {
   return this_predict;
 }
 
-void ISR1(){
-    if (mode == 1){
-      mode = 3;
-    } else if (mode == 5){
-      mode = 6;
-    } else {
-      mode = 4;
-    }
-}
+
 
 int main(int argc, char* argv[]) {
 
@@ -99,6 +141,7 @@ int main(int argc, char* argv[]) {
 
   // The gesture index of the prediction
   int gesture_index;
+  int leng;
 
   // Set up logging.
   static tflite::MicroErrorReporter micro_error_reporter;
@@ -223,19 +266,21 @@ int main(int argc, char* argv[]) {
         song = gesture_index + 1;
         uLCD.cls();
         uLCD.printf("\nPlaying song #%d\n", gesture_index+1); //Default Green on black text
-        // for(int i = 0; i < 42; i++)
-        // {
-        //   int length = 1;
-        //   while(length--)
-        //   {
-        //     // the loop below will play the note for the duration of 1s
-        //     for(int j = 0; j < kAudioSampleFrequency / kAudioTxBufferSize; ++j)
-        //     {
-              playNote(330);
-        //     }
-        //     if(length < 1) wait(1.0);
-        //   }
-        // }
+        error_reporter->Report("%d\n", gesture_index);
+        if(gesture_index == 0) {
+          leng = 42;
+        } else {
+          leng = 24;
+        }
+        redLED = 0;
+        loadSignal(leng);
+        redLED = 1;
+        for (int j = 0; j < leng; j++) {
+          uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
+          playNote(song_note[j]);
+          wait_us(1000000);
+        }
+        audio.spk.pause();
       } else if (mode == 2) {
         if (gesture_index == 0) {
           uLCD.cls();
