@@ -223,19 +223,19 @@ int main(int argc, char* argv[]) {
         song = gesture_index + 1;
         uLCD.cls();
         uLCD.printf("\nPlaying song #%d\n", gesture_index+1); //Default Green on black text
-        for(int i = 0; i < 42; i++)
-        {
-          int length = 1;
-          while(length--)
-          {
-            // the loop below will play the note for the duration of 1s
-            for(int j = 0; j < kAudioSampleFrequency / kAudioTxBufferSize; ++j)
-            {
+        // for(int i = 0; i < 42; i++)
+        // {
+        //   int length = 1;
+        //   while(length--)
+        //   {
+        //     // the loop below will play the note for the duration of 1s
+        //     for(int j = 0; j < kAudioSampleFrequency / kAudioTxBufferSize; ++j)
+        //     {
               playNote(330);
-            }
-            if(length < 1) wait(1.0);
-          }
-        }
+        //     }
+        //     if(length < 1) wait(1.0);
+        //   }
+        // }
       } else if (mode == 2) {
         if (gesture_index == 0) {
           uLCD.cls();
