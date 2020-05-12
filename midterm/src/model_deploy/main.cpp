@@ -49,7 +49,7 @@ void playNote(float freq)
 }
 
 int serialCount =0;
-float song_note[42];
+float song_note[66];
 
 void ISR1(){
     if (mode == 1){
@@ -210,6 +210,10 @@ int main(int argc, char* argv[]) {
   uLCD.printf("\n1: Little Star\n"); //Default Green on black text
   uLCD.printf("\n2: Birthday\n"); //Default Green on black text
 
+        redLED = 0;
+        loadSignal(66);
+        redLED = 1;
+
   while (true) {
 
     // Attempt to read new data from the accelerometer
@@ -266,19 +270,18 @@ int main(int argc, char* argv[]) {
         song = gesture_index + 1;
         uLCD.cls();
         uLCD.printf("\nPlaying song #%d\n", gesture_index+1); //Default Green on black text
-        error_reporter->Report("%d\n", gesture_index);
         if(gesture_index == 0) {
-          leng = 42;
+          for (int j = 0; j < 42; j++) {
+            uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
+            playNote(song_note[j]);
+            wait_us(1000000);
+          }
         } else {
-          leng = 24;
-        }
-        redLED = 0;
-        loadSignal(leng);
-        redLED = 1;
-        for (int j = 0; j < leng; j++) {
-          uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
-          playNote(song_note[j]);
-          wait_us(1000000);
+          for (int j = 42; j < 66; j++) {
+            uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
+            playNote(song_note[j]);
+            wait_us(1000000);
+          }
         }
         audio.spk.pause();
       } else if (mode == 2) {
@@ -294,9 +297,49 @@ int main(int argc, char* argv[]) {
           uLCD.printf("\n1: Little Star\n"); //Default Green on black text
           uLCD.printf("\n2: Birthday\n"); //Default Green on black text
           mode = 5;
-        }
-        song = 0;
-      } 
+        } 
+      } else if (mode == 5) {
+          uLCD.cls();
+          uLCD.printf("\nPlaying song #%d\n", gesture_index+1); //Default Green on black text
+          if(gesture_index == 0) {
+            for (int j = 0; j < 42; j++) {
+              uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
+              playNote(song_note[j]);
+              wait_us(1000000);
+              // while(true){
+              //   got_data = ReadAccelerometer(error_reporter, model_input->data.f,
+              //                               input_length, should_clear_buffer);
+
+              //   // If there was no new data,
+              //   // don't try to clear the buffer again and wait until next time
+              //   if (!got_data) {
+              //     should_clear_buffer = false;
+              //     continue;
+              //   }
+
+              //   // Run inference, and report any error
+              //   TfLiteStatus invoke_status = interpreter->Invoke();
+              //   if (invoke_status != kTfLiteOk) {
+              //     error_reporter->Report("Invoke failed on index: %d\n", begin_index);
+              //     continue;
+              //   }
+
+              //   // Analyze the results to obtain a prediction
+              //   gesture_index = PredictGesture(interpreter->output(0)->data.f);
+
+              //   // Clear the buffer next time we read data
+              //   should_clear_buffer = gesture_index < label_num;
+              // }
+            }
+          } else {
+            for (int j = 42; j < 66; j++) {
+              uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
+              playNote(song_note[j]);
+              wait_us(1000000);
+            }
+          }
+    
+      }
     } 
   }
 }

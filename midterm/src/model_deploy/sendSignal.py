@@ -24,7 +24,17 @@ song =np.array(
 
   261, 261, 392, 392, 440, 440, 392,
 
-  349, 349, 330, 330, 294, 294, 261
+  349, 349, 330, 330, 294, 294, 261,
+  261, 261, 294, 261, 349, 330,
+
+  261, 261, 294, 261, 392, 349,
+
+  261, 261, 523, 440, 349, 330,
+
+  349, 349, 330, 261, 294, 261,
+  261, 261, 523, 440, 349, 330,
+
+  349, 349, 330, 261, 294, 261
 ]
 
 )
@@ -64,24 +74,12 @@ s = serial.Serial(serdev)
 while(1):
     b = s.readline()
     print(b[0])
-    if(b[0] == 48):
+    if(b[0] == 13):
       print("Sending signal ...")
 
       print("It may take about  seconds ..." )
 
       for data in song:
-          s.write(bytes(formatter(data), 'UTF-8'))
-          time.sleep(waitTime)
-
-          #s.close()
-
-      print("Signal sended")
-    if(b[0] == 49):
-      print("Sending signal ...")
-
-      print("It may take about  seconds ..." )
-
-      for data in song2:
           s.write(bytes(formatter(data), 'UTF-8'))
           time.sleep(waitTime)
 
