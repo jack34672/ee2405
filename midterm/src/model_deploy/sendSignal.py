@@ -71,10 +71,18 @@ serdev = '/dev/ttyACM0'
 
 s = serial.Serial(serdev)
 
+s.write(bytes(formatter(song[0]), 'UTF-8'))
+s.write(bytes(formatter(song[0]), 'UTF-8'))
+s.write(bytes(formatter(song[0]), 'UTF-8'))
+s.write(bytes(formatter(song[0]), 'UTF-8'))
+s.write(bytes(formatter(song[0]), 'UTF-8'))
+
+
 while(1):
     b = s.readline()
+    print(b)
     print(b[0])
-    if(b[0] == 13):
+    if((b[0] == 48) or (b[0] == 49)):
       print("Sending signal ...")
 
       print("It may take about  seconds ..." )

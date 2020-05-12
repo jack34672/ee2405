@@ -32,6 +32,8 @@ int mode = 0;
 int song = 0;
 char serialInBuffer[bufferLength];
 
+Timer t;
+
 void playNote(float freq)
 {
   float frequency =  freq;
@@ -141,7 +143,7 @@ int main(int argc, char* argv[]) {
 
   // The gesture index of the prediction
   int gesture_index;
-  int leng;
+  int first = 0;
 
   // Set up logging.
   static tflite::MicroErrorReporter micro_error_reporter;
@@ -210,9 +212,6 @@ int main(int argc, char* argv[]) {
   uLCD.printf("\n1: Little Star\n"); //Default Green on black text
   uLCD.printf("\n2: Birthday\n"); //Default Green on black text
 
-        redLED = 0;
-        loadSignal(66);
-        redLED = 1;
 
   while (true) {
 
@@ -266,7 +265,14 @@ int main(int argc, char* argv[]) {
     if (gesture_index < label_num) {
       // error_reporter->Report(config.output_message[gesture_index]);
       if (mode == 0) {
-        mode = 1;
+        if (first == 0){
+          uLCD.printf("\nloading\n"); //Default Green on black text
+          error_reporter->Report("0");
+          redLED = 0;
+          loadSignal(66);
+          redLED = 1;
+          first = 1;
+        }
         song = gesture_index + 1;
         uLCD.cls();
         uLCD.printf("\nPlaying song #%d\n", gesture_index+1); //Default Green on black text
@@ -283,7 +289,6 @@ int main(int argc, char* argv[]) {
             wait_us(1000000);
           }
         }
-        audio.spk.pause();
       } else if (mode == 2) {
         if (gesture_index == 0) {
           uLCD.cls();
@@ -299,43 +304,101 @@ int main(int argc, char* argv[]) {
           mode = 5;
         } 
       } else if (mode == 5) {
+          int point = 0;
+          int ans = 0;
           uLCD.cls();
           uLCD.printf("\nPlaying song #%d\n", gesture_index+1); //Default Green on black text
           if(gesture_index == 0) {
             for (int j = 0; j < 42; j++) {
-              uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
+              // uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
               playNote(song_note[j]);
-              wait_us(1000000);
-              // while(true){
-              //   got_data = ReadAccelerometer(error_reporter, model_input->data.f,
-              //                               input_length, should_clear_buffer);
+              uLCD.locate(1,2);
+              uLCD.printf("hit: %2D", ans);
+              ans = (int)(500*song_note[j]) % 2;
+              t.start();
+              wait_us(500000);
+              error_reporter->Report("Time %f\n", t.read());
+              t.reset();
+              t.start();
+              while(t.read() < 0.73){
+                got_data = ReadAccelerometer(error_reporter, model_input->data.f,
+                                            input_length, should_clear_buffer);
 
-              //   // If there was no new data,
-              //   // don't try to clear the buffer again and wait until next time
-              //   if (!got_data) {
-              //     should_clear_buffer = false;
-              //     continue;
-              //   }
+                // If there was no new data,
+                // don't try to clear the buffer again and wait until next time
+                if (!got_data) {
+                  should_clear_buffer = false;
+                  continue;
+                }
 
-              //   // Run inference, and report any error
-              //   TfLiteStatus invoke_status = interpreter->Invoke();
-              //   if (invoke_status != kTfLiteOk) {
-              //     error_reporter->Report("Invoke failed on index: %d\n", begin_index);
-              //     continue;
-              //   }
+                // Run inference, and report any error
+                TfLiteStatus invoke_status = interpreter->Invoke();
+                if (invoke_status != kTfLiteOk) {
+                  error_reporter->Report("Invoke failed on index: %d\n", begin_index);
+                  continue;
+                }
 
-              //   // Analyze the results to obtain a prediction
-              //   gesture_index = PredictGesture(interpreter->output(0)->data.f);
+                // Analyze the results to obtain a prediction
+                gesture_index = PredictGesture(interpreter->output(0)->data.f);
 
-              //   // Clear the buffer next time we read data
-              //   should_clear_buffer = gesture_index < label_num;
-              // }
+                // Clear the buffer next time we read data
+                should_clear_buffer = gesture_index < label_num;
+                if (gesture_index < label_num) {
+                  if (gesture_index == ans){
+                    error_reporter->Report("Taiko %d\n", gesture_index);
+                    point++;
+                    uLCD.locate(1,8);
+                    uLCD.printf("points: %2D", point);
+                  }
+                }
+              }
+              t.reset();
             }
           } else {
             for (int j = 42; j < 66; j++) {
-              uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
+              // uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
               playNote(song_note[j]);
-              wait_us(1000000);
+              uLCD.locate(1,2);
+              uLCD.printf("hit: %2D", ans);
+              ans = (int)(500*song_note[j]) % 2;
+              t.start();
+              wait_us(500000);
+              error_reporter->Report("Time %f\n", t.read());
+              t.reset();
+              t.start();
+              while(t.read() < 0.73){
+                got_data = ReadAccelerometer(error_reporter, model_input->data.f,
+                                            input_length, should_clear_buffer);
+
+                // If there was no new data,
+                // don't try to clear the buffer again and wait until next time
+                if (!got_data) {
+                  should_clear_buffer = false;
+                  continue;
+                }
+
+                // Run inference, and report any error
+                TfLiteStatus invoke_status = interpreter->Invoke();
+                if (invoke_status != kTfLiteOk) {
+                  error_reporter->Report("Invoke failed on index: %d\n", begin_index);
+                  continue;
+                }
+
+                // Analyze the results to obtain a prediction
+                gesture_index = PredictGesture(interpreter->output(0)->data.f);
+
+                // Clear the buffer next time we read data
+                should_clear_buffer = gesture_index < label_num;
+                if (gesture_index < label_num) {
+                  if (gesture_index == ans){
+                    error_reporter->Report("Taiko %d\n", gesture_index);
+                    point++;
+                    uLCD.locate(1,8);
+                    uLCD.printf("points: %2D", point);
+                  }
+                }
+              }
+              t.reset();
             }
           }
     
