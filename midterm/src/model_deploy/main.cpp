@@ -281,12 +281,14 @@ int main(int argc, char* argv[]) {
             uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
             playNote(song_note[j]);
             wait_us(1000000);
+            button.rise(&ISR1);
           }
         } else {
           for (int j = 42; j < 66; j++) {
             uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
             playNote(song_note[j]);
             wait_us(1000000);
+            button.rise(&ISR1);
           }
         }
       } else if (mode == 2) {
@@ -306,6 +308,8 @@ int main(int argc, char* argv[]) {
       } else if (mode == 5) {
           int point = 0;
           int ans = 0;
+          int pos = 0;
+          int ori_pos = 0;
           uLCD.cls();
           uLCD.printf("\nPlaying song #%d\n", gesture_index+1); //Default Green on black text
           if(gesture_index == 0) {
@@ -313,8 +317,10 @@ int main(int argc, char* argv[]) {
               // uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
               playNote(song_note[j]);
               uLCD.locate(1,2);
+              ans = ((int)(500*song_note[j]) + point) % 2;
               uLCD.printf("hit: %2D", ans);
-              ans = (int)(500*song_note[j]) % 2;
+              uLCD.locate(1,8);
+              uLCD.printf("points: %2D", point);
               t.start();
               wait_us(500000);
               error_reporter->Report("Time %f\n", t.read());
@@ -343,6 +349,14 @@ int main(int argc, char* argv[]) {
 
                 // Clear the buffer next time we read data
                 should_clear_buffer = gesture_index < label_num;
+
+                pos = (int)(t.read()*10);
+                if(pos != ori_pos){
+                  uLCD.locate(pos,5);
+                  uLCD.printf("O");
+                  ori_pos = pos;
+                }
+
                 if (gesture_index < label_num) {
                   if (gesture_index == ans){
                     error_reporter->Report("Taiko %d\n", gesture_index);
@@ -353,14 +367,17 @@ int main(int argc, char* argv[]) {
                 }
               }
               t.reset();
+              uLCD.cls();
             }
           } else {
             for (int j = 42; j < 66; j++) {
               // uLCD.printf("\nPlaying song #%f\n", 500*song_note[j]); //Default Green on black text
               playNote(song_note[j]);
               uLCD.locate(1,2);
+              ans = ((int)(500*song_note[j]) + point) % 2;
               uLCD.printf("hit: %2D", ans);
-              ans = (int)(500*song_note[j]) % 2;
+              uLCD.locate(1,8);
+              uLCD.printf("points: %2D", point);
               t.start();
               wait_us(500000);
               error_reporter->Report("Time %f\n", t.read());
@@ -389,6 +406,14 @@ int main(int argc, char* argv[]) {
 
                 // Clear the buffer next time we read data
                 should_clear_buffer = gesture_index < label_num;
+
+                pos = (int)(t.read()*10);
+                if(pos != ori_pos){
+                  uLCD.locate(pos,5);
+                  uLCD.printf("O");
+                  ori_pos = pos;
+                }                
+
                 if (gesture_index < label_num) {
                   if (gesture_index == ans){
                     error_reporter->Report("Taiko %d\n", gesture_index);
@@ -399,6 +424,7 @@ int main(int argc, char* argv[]) {
                 }
               }
               t.reset();
+              uLCD.cls();
             }
           }
     

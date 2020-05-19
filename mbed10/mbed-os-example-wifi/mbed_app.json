@@ -1,0 +1,17 @@
+{
+    "config": {
+        "wifi-ssid": {
+            "help": "WiFi SSID",
+            "value": "\"Jack_ROG_PhoneII\""
+        },
+        "wifi-password": {
+            "help": "WiFi Password",
+            "value": "\"chen@jack\""
+        }
+    },
+    "target_overrides": {
+        "*": {
+            "platform.stdio-convert-newlines": true
+        }
+    }
+}
