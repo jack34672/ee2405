@@ -23,6 +23,7 @@
 
 // Configuration parameters
 #define MBED_CONF_APP_WIFI_PASSWORD                                           "chen@jack"                                                                                      // set by application
+#define MBED_CONF_APP_WIFI_SHIELD                                             WIFI_ESP8266                                                                                     // set by application
 #define MBED_CONF_APP_WIFI_SSID                                               "Jack_ROG_PhoneII"                                                                               // set by application
 #define MBED_CONF_ATMEL_RF_ASSUME_SPACED_SPI                                  0                                                                                                // set by library:atmel-rf
 #define MBED_CONF_ATMEL_RF_FULL_SPI_SPEED                                     7500000                                                                                          // set by library:atmel-rf
@@ -41,7 +42,7 @@
 #define MBED_CONF_ESP8266_POWER_OFF_TIME_MS                                   3                                                                                                // set by library:esp8266
 #define MBED_CONF_ESP8266_POWER_ON_POLARITY                                   0                                                                                                // set by library:esp8266
 #define MBED_CONF_ESP8266_POWER_ON_TIME_MS                                    3                                                                                                // set by library:esp8266
-#define MBED_CONF_ESP8266_PROVIDE_DEFAULT                                     0                                                                                                // set by library:esp8266
+#define MBED_CONF_ESP8266_PROVIDE_DEFAULT                                     1                                                                                                // set by application[*]
 #define MBED_CONF_ESP8266_SERIAL_BAUDRATE                                     115200                                                                                           // set by library:esp8266
 #define MBED_CONF_ESP8266_SOCKET_BUFSIZE                                      8192                                                                                             // set by library:esp8266
 #define MBED_CONF_EVENTS_PRESENT                                              1                                                                                                // set by library:events

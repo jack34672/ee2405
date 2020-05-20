@@ -57,11 +57,12 @@ void messageArrived(MQTT::MessageData& md) {
       ++arrivedcount;
 }
 
-void publish_message(MQTT::Client<MQTTNetwork, Countdown>* client) {
+void publish_message(MQTT::Client<MQTTNetwork, Countdown>* client, float t[3]) {
       message_num++;
       MQTT::Message message;
       char buff[100];
       sprintf(buff, "QoS0 Hello, Python! #%d", message_num);
+      sprintf(buff, "FXOS8700Q ACC: X=%1.4f Y=%1.4f  Z=%1.4\r\n",  t[0],  t[1],  t[2] );
       message.qos = MQTT::QOS0;
       message.retained = false;
       message.dup = false;
@@ -119,8 +120,12 @@ int main() {
             printf("Fail to subscribe\r\n");
       }
 
+      uint8_t who_am_i, dataa[2], res[6];
+      int16_t acc16;
+      float t[3];
+
       mqtt_thread.start(callback(&mqtt_queue, &EventQueue::dispatch_forever));
-      btn2.rise(mqtt_queue.event(&publish_message, &client));
+      btn2.rise(mqtt_queue.event(&publish_message, &client, t));
       btn3.rise(&close_mqtt);
 
       int num = 0;
@@ -129,14 +134,12 @@ int main() {
             ++num;
       }
 
-      uint8_t who_am_i, data[2], res[6];
-      int16_t acc16;
-      float t[3];
 
-      FXOS8700CQ_readRegs( FXOS8700Q_CTRL_REG1, &data[1], 1);
-      data[1] |= 0x01;
-      data[0] = FXOS8700Q_CTRL_REG1;
-      FXOS8700CQ_writeRegs(data, 2);
+
+      FXOS8700CQ_readRegs( FXOS8700Q_CTRL_REG1, &dataa[1], 1);
+      dataa[1] |= 0x01;
+      dataa[0] = FXOS8700Q_CTRL_REG1;
+      FXOS8700CQ_writeRegs(dataa, 2);
 
       // Get the slave address
       FXOS8700CQ_readRegs(FXOS8700Q_WHOAMI, &who_am_i, 1);
@@ -161,14 +164,14 @@ int main() {
             t[2] = ((float)acc16) / 4096.0f;
 
 
-            publish_message(t);
+            publish_message(&client, t);
             printf("FXOS8700Q ACC: X=%1.4f(%x%x) Y=%1.4f(%x%x) Z=%1.4f(%x%x)\r\n",\
                   t[0], res[0], res[1],\
                   t[1], res[2], res[3],\
                   t[2], res[4], res[5]\
             );
 
-            wait(1.0);
+            wait(0.5);
       }
 
       printf("Ready to close MQTT Network......\n");
@@ -184,4 +187,14 @@ int main() {
       printf("Successfully closed!\n");
 
       return 0;
+}
+
+void FXOS8700CQ_readRegs(int addr, uint8_t * data, int len) {
+   char t = addr;
+   i2c.write(m_addr, &t, 1, true);
+   i2c.read(m_addr, (char *)data, len);
+}
+
+void FXOS8700CQ_writeRegs(uint8_t * data, int len) {
+   i2c.write(m_addr, (char *)data, len);
 }
