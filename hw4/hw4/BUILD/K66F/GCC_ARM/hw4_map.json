@@ -2,10 +2,10 @@
     {
         "module": "[fill]",
         "size": {
-            ".text": 283,
+            ".text": 278,
             ".data": 12,
-            ".bss": 36,
-            ".text-delta": 0,
+            ".bss": 40,
+            ".text-delta": -6,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -16,7 +16,7 @@
             ".text": 48246,
             ".data": 2472,
             ".bss": 89,
-            ".text-delta": 0,
+            ".text-delta": 174,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -68,10 +68,10 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 5145,
+            ".text": 5691,
             ".data": 12,
-            ".bss": 752,
-            ".text-delta": 0,
+            ".bss": 1044,
+            ".text-delta": 2,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -79,10 +79,10 @@
     {
         "module": "mbed-os/components",
         "size": {
-            ".text": 14075,
+            ".text": 14077,
             ".data": 0,
             ".bss": 1364,
-            ".text-delta": 0,
+            ".text-delta": -2,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -90,7 +90,7 @@
     {
         "module": "mbed-os/drivers",
         "size": {
-            ".text": 4408,
+            ".text": 4340,
             ".data": 0,
             ".bss": 44,
             ".text-delta": 0,
@@ -200,7 +200,7 @@
     {
         "module": "wifi_mqtt/MQTT",
         "size": {
-            ".text": 1872,
+            ".text": 1824,
             ".data": 0,
             ".bss": 4,
             ".text-delta": 0,
@@ -210,10 +210,10 @@
     },
     {
         "summary": {
-            "static_ram": 15424,
+            "static_ram": 15720,
             "static_ram_delta": 0,
-            "total_flash": 133614,
-            "total_flash_delta": 0
+            "total_flash": 134041,
+            "total_flash_delta": 168
         }
     }
 ]

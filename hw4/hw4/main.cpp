@@ -54,9 +54,14 @@ volatile bool closed = false;
 
 const char* topic = "Mbed";
 
+Thread mqtt_thread(osPriorityHigh);
+EventQueue mqtt_queue;
+
 int first = 1;
 float orig_z;
 int tilt = 0;
+int count_time = 0;
+
 
 void messageArrived(MQTT::MessageData& md) {
       MQTT::Message &message = md.message;
@@ -73,7 +78,7 @@ void messageArrived(MQTT::MessageData& md) {
 void publish_message(MQTT::Client<MQTTNetwork, Countdown>* client, float t[3]) {
       message_num++;
       MQTT::Message message;
-      char buff[100];
+      char buff[200];
       sprintf(buff, "QoS0 Hello, Python! #%d", message_num);
       sprintf(buff, "FXOS8700Q ACC: X=%1.4f Y=%1.4f  Z=%1.4\r\n",  t[0],  t[1],  t[2] );
       message.qos = MQTT::QOS0;
@@ -95,58 +100,83 @@ void close_mqtt() {
 int main(){
 
       wifi = WiFiInterface::get_default_instance();
+
       if (!wifi) {
-            pc.printf("ERROR: No WiFiInterface found.\r\n");
+
+            printf("ERROR: No WiFiInterface found.\r\n");
+
             return -1;
+
       }
 
 
-      pc.printf("\nConnecting to %s...\r\n", MBED_CONF_APP_WIFI_SSID);
+
+      printf("\nConnecting to %s...\r\n", MBED_CONF_APP_WIFI_SSID);
+
       int ret = wifi->connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);
+
       if (ret != 0) {
-            pc.printf("\nConnection error: %d\r\n", ret);
+
+            printf("\nConnection error: %d\r\n", ret);
+
             return -1;
+
       }
+
 
 
       NetworkInterface* net = wifi;
+
       MQTTNetwork mqttNetwork(net);
+
       MQTT::Client<MQTTNetwork, Countdown> client(mqttNetwork);
 
+
       //TODO: revise host to your ip
-      const char* host = "192.168.1.113";
-      pc.printf("Connecting to TCP network...\r\n");
+
+      const char* host = "192.168.100.7";
+
+      printf("Connecting to TCP network...\r\n");
+
       int rc = mqttNetwork.connect(host, 1883);
+
       if (rc != 0) {
-            pc.printf("Connection error.");
+
+            printf("Connection error.");
+
             return -1;
-      }
-      pc.printf("Successfully connected!\r\n");
 
-      MQTTPacket_connectData MQdata = MQTTPacket_connectData_initializer;
-      MQdata.MQTTVersion = 3;
-      MQdata.clientID.cstring = "Mbed";
-
-      if ((rc = client.connect(MQdata)) != 0){
-            pc.printf("Fail to connect MQTT\r\n");
       }
+
+      printf("Successfully connected!\r\n");
+
+
+      MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
+
+      data.MQTTVersion = 3;
+
+      data.clientID.cstring = "Mbed";
+
+
+      if ((rc = client.connect(data)) != 0){
+
+            printf("Fail to connect MQTT\r\n");
+
+      }
+
       if (client.subscribe(topic, MQTT::QOS0, messageArrived) != 0){
-            pc.printf("Fail to subscribe\r\n");
-      }
 
-      int num = 0;
-      while (num != 5) {
-            client.yield(100);
-            ++num;
+            printf("Fail to subscribe\r\n");
+
       }
 
 
   pc.baud(9600);
-  uint8_t data[2] ;
-  FXOS8700CQ_readRegs( FXOS8700Q_CTRL_REG1, &data[1], 1);
-  data[1] |= 0x01;
-  data[0] = FXOS8700Q_CTRL_REG1;
-  FXOS8700CQ_writeRegs(data, 2);
+  uint8_t dataa[2] ;
+  FXOS8700CQ_readRegs( FXOS8700Q_CTRL_REG1, &dataa[1], 1);
+  dataa[1] |= 0x01;
+  dataa[0] = FXOS8700Q_CTRL_REG1;
+  FXOS8700CQ_writeRegs(dataa, 2);
   char xbee_reply[4];
 
  // XBee setting
@@ -186,20 +216,113 @@ int main(){
 
   // Setup a serial interrupt function of receiving data from xbee
   xbee.attach(xbee_rx_interrupt, Serial::RxIrq);
+  mqtt_thread.start(callback(&mqtt_queue, &EventQueue::dispatch_forever));
 
-      printf("Ready to close MQTT Network......\n");
+  while (1) {
+   int16_t acc16;
+   float t[3];
+   uint8_t res[6];
+   int i;
+   FXOS8700CQ_readRegs(FXOS8700Q_OUT_X_MSB, res, 6);
+   acc16 = (res[0] << 6) | (res[1] >> 2);
+   if (acc16 > UINT14_MAX/2)
+      acc16 -= UINT14_MAX;
+   t[0] = ((float)acc16) / 4096.0f;
 
-      if ((rc = client.unsubscribe(topic)) != 0) {
-            printf("Failed: rc from unsubscribe was %d\n", rc);
+   acc16 = (res[2] << 6) | (res[3] >> 2);
+   if (acc16 > UINT14_MAX/2)
+      acc16 -= UINT14_MAX;
+   t[1] = ((float)acc16) / 4096.0f;
+
+   acc16 = (res[4] << 6) | (res[5] >> 2);
+   if (acc16 > UINT14_MAX/2)
+      acc16 -= UINT14_MAX;
+   t[2] = ((float)acc16) / 4096.0f;
+
+    if(first == 1){
+      orig_z = t[2];
+      first = 0;
+    }
+
+    if( t[2] < orig_z/sqrt(2) )
+      tilt = 1;
+    else
+    {
+      tilt = 0;
+    }
+    pc.printf("FXOS8700Q ACC: X=%1.4f(%x%x) Y=%1.4f(%x%x) Z=%1.4f(%x%x)",\
+         t[0], res[0], res[1], \
+         t[1], res[2], res[3],\
+         t[2], res[4], res[5]
+    );
+
+    if (tilt == 1) {
+      for (i = 0; i < 10 ; i++) {
+        int16_t acc16;
+        float t[3];
+        uint8_t res[6];
+        FXOS8700CQ_readRegs(FXOS8700Q_OUT_X_MSB, res, 6);
+        acc16 = (res[0] << 6) | (res[1] >> 2);
+        if (acc16 > UINT14_MAX/2)
+            acc16 -= UINT14_MAX;
+        t[0] = ((float)acc16) / 4096.0f;
+
+        acc16 = (res[2] << 6) | (res[3] >> 2);
+        if (acc16 > UINT14_MAX/2)
+            acc16 -= UINT14_MAX;
+        t[1] = ((float)acc16) / 4096.0f;
+
+        acc16 = (res[4] << 6) | (res[5] >> 2);
+        if (acc16 > UINT14_MAX/2)
+            acc16 -= UINT14_MAX;
+        t[2] = ((float)acc16) / 4096.0f;
+
+          if(first == 1){
+            orig_z = t[2];
+            first = 0;
+          }
+
+          if( t[2] < orig_z/sqrt(2) )
+            tilt = 1;
+          else
+          {
+            tilt = 0;
+          }
+          pc.printf("FXOS8700Q ACC: X=%1.4f(%x%x) Y=%1.4f(%x%x) Z=%1.4f(%x%x)",\
+              t[0], res[0], res[1], \
+              t[1], res[2], res[3],\
+              t[2], res[4], res[5]
+          );
+          publish_message(&client, t);
+          count_time++;
+          wait(0.1);
       }
-      if ((rc = client.disconnect()) != 0) {
-      printf("Failed: rc from disconnect was %d\n", rc);
-      }
 
-      mqttNetwork.disconnect();
-      printf("Successfully closed!\n");
+    }
 
-      return 0;
+    publish_message(&client, t);
+
+    // xbee.printf("%d\r\n", tilt);
+    
+    count_time++;
+
+    wait(1);
+
+  }
+
+      // printf("Ready to close MQTT Network......\n");
+
+      // if ((rc = client.unsubscribe(topic)) != 0) {
+      //       printf("Failed: rc from unsubscribe was %d\n", rc);
+      // }
+      // if ((rc = client.disconnect()) != 0) {
+      // printf("Failed: rc from disconnect was %d\n", rc);
+      // }
+
+      // mqttNetwork.disconnect();
+      // printf("Successfully closed!\n");
+
+      // return 0;
 
 }
 
@@ -257,46 +380,46 @@ void check_addr(char *xbee_reply, char *messenger){
 }
 
 void getAcc(Arguments *in, Reply *out) {
-   int16_t acc16;
-   float t[3];
-   uint8_t res[6];
-   FXOS8700CQ_readRegs(FXOS8700Q_OUT_X_MSB, res, 6);
-   acc16 = (res[0] << 6) | (res[1] >> 2);
-   if (acc16 > UINT14_MAX/2)
-      acc16 -= UINT14_MAX;
-   t[0] = ((float)acc16) / 4096.0f;
+  //  int16_t acc16;
+  //  float t[3];
+  //  uint8_t res[6];
+  //  FXOS8700CQ_readRegs(FXOS8700Q_OUT_X_MSB, res, 6);
+  //  acc16 = (res[0] << 6) | (res[1] >> 2);
+  //  if (acc16 > UINT14_MAX/2)
+  //     acc16 -= UINT14_MAX;
+  //  t[0] = ((float)acc16) / 4096.0f;
 
-   acc16 = (res[2] << 6) | (res[3] >> 2);
-   if (acc16 > UINT14_MAX/2)
-      acc16 -= UINT14_MAX;
-   t[1] = ((float)acc16) / 4096.0f;
+  //  acc16 = (res[2] << 6) | (res[3] >> 2);
+  //  if (acc16 > UINT14_MAX/2)
+  //     acc16 -= UINT14_MAX;
+  //  t[1] = ((float)acc16) / 4096.0f;
 
-   acc16 = (res[4] << 6) | (res[5] >> 2);
-   if (acc16 > UINT14_MAX/2)
-      acc16 -= UINT14_MAX;
-   t[2] = ((float)acc16) / 4096.0f;
+  //  acc16 = (res[4] << 6) | (res[5] >> 2);
+  //  if (acc16 > UINT14_MAX/2)
+  //     acc16 -= UINT14_MAX;
+  //  t[2] = ((float)acc16) / 4096.0f;
 
-    if(first == 1){
-      orig_z = t[2];
-      first = 0;
-    }
+  //   if(first == 1){
+  //     orig_z = t[2];
+  //     first = 0;
+  //   }
 
-    if( t[2] < orig_z/sqrt(2) )
-      tilt = 1;
-    else
-    {
-      tilt = 0;
-    }
-    pc.printf("FXOS8700Q ACC: X=%1.4f(%x%x) Y=%1.4f(%x%x) Z=%1.4f(%x%x)",\
-         t[0], res[0], res[1], \
-         t[1], res[2], res[3],\
-         t[2], res[4], res[5]
-    );
+  //   if( t[2] < orig_z/sqrt(2) )
+  //     tilt = 1;
+  //   else
+  //   {
+  //     tilt = 0;
+  //   }
+  //   pc.printf("FXOS8700Q ACC: X=%1.4f(%x%x) Y=%1.4f(%x%x) Z=%1.4f(%x%x)",\
+  //        t[0], res[0], res[1], \
+  //        t[1], res[2], res[3],\
+  //        t[2], res[4], res[5]
+  //   );
 
-    //publish_message(&client, t);
+  //   // publish_message(&client_add, t);
 
-    xbee.printf("%d\r\n", tilt);
-
+    xbee.printf("%d\r\n", count_time);
+    count_time = 0;
 }
 
 void getAddr(Arguments *in, Reply *out) {

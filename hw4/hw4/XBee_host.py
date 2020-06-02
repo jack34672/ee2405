@@ -58,6 +58,8 @@ Z = np.arange(0,1000,1)
 tilt = np.arange(0,1000,1) 
 
 i = 0
+last = 0
+first = 1
 s.write("/getAcc/run\r".encode())
 time.sleep(0.5)
 s.write("/getAcc/run\r".encode())
@@ -66,20 +68,11 @@ line=s.read(1)
 while True:
     # send RPC to remote
     s.write("/getAcc/run\r".encode())
-    line=s.readline() # Read an echo string from K66F terminated with '\n'
+    line = s.readline() # Read an echo string from K66F terminated with '\n'
     tilt[i] = int(line)
     print(tilt[i])
-    if tilt[i] == 1:
-        time.sleep(0.1)
-        for x in range(10):
-            i = i + 1
-            s.write("/getAcc/run\r".encode())
-            line=s.readline() # Read an echo string from K66F terminated with '\n'
-            tilt[i] = float(line)
-            print(tilt[i])
-            time.sleep(0.1)
-    time.sleep(0.5)
     i = i + 1
+    time.sleep(2.5)
 s.close()
 
 fig, ax = plt.subplots(2, 1)

@@ -2,10 +2,10 @@
     {
         "module": "[fill]",
         "size": {
-            ".text": 277,
+            ".text": 278,
             ".data": 16,
             ".bss": 47,
-            ".text-delta": -2,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -68,10 +68,10 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 4884,
+            ".text": 4894,
             ".data": 8,
             ".bss": 573,
-            ".text-delta": -9,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -156,10 +156,10 @@
     {
         "module": "mbed-os/targets",
         "size": {
-            ".text": 15371,
+            ".text": 15368,
             ".data": 36,
             ".bss": 950,
-            ".text-delta": 3,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -179,8 +179,8 @@
         "summary": {
             "static_ram": 15968,
             "static_ram_delta": 0,
-            "total_flash": 137288,
-            "total_flash_delta": -8
+            "total_flash": 137296,
+            "total_flash_delta": 0
         }
     }
 ]
