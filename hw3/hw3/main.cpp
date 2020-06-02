@@ -1,6 +1,10 @@
 #include "mbed.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
+#include "MQTTNetwork.h"
+#include "MQTTmbed.h"
+#include "MQTTClient.h"
+
 #define UINT14_MAX        16383
 // FXOS8700CQ I2C address
 #define FXOS8700CQ_SLAVE_ADDR0 (0x1E<<1) // with pins SA0=0, SA1=0
