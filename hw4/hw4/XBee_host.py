@@ -1,5 +1,7 @@
 import serial
 import time
+import matplotlib.pyplot as plt
+import numpy as np
 
 # XBee setting
 serdev = '/dev/ttyUSB0'
@@ -56,55 +58,28 @@ Z = np.arange(0,1000,1)
 tilt = np.arange(0,1000,1) 
 
 i = 0
-
+s.write("/getAcc/run\r".encode())
+time.sleep(0.5)
+s.write("/getAcc/run\r".encode())
+time.sleep(0.5)
+line=s.read(1)
 while True:
     # send RPC to remote
     s.write("/getAcc/run\r".encode())
     line=s.readline() # Read an echo string from K66F terminated with '\n'
-    line2=s.readline() # Read an echo string from K66F terminated with '\n'
-    line3=s.readline() # Read an echo string from K66F terminated with '\n'
-    line4=s.readline() # Read an echo string from K66F terminated with '\n'
-    X[i] = float(line)
-    Y[i] = float(line2)
-    Z[i] = float(line3)
-    tilt[i] = float(line4)
-    i = i + 1
+    tilt[i] = int(line)
+    print(tilt[i])
     if tilt[i] == 1:
+        time.sleep(0.1)
         for x in range(10):
+            i = i + 1
             s.write("/getAcc/run\r".encode())
             line=s.readline() # Read an echo string from K66F terminated with '\n'
-            line2=s.readline() # Read an echo string from K66F terminated with '\n'
-            line3=s.readline() # Read an echo string from K66F terminated with '\n'
-            line4=s.readline() # Read an echo string from K66F terminated with '\n'
-            X[i] = float(line)
-            Y[i] = float(line2)
-            Z[i] = float(line3)
-            tilt[i] = float(line4)
-            i = i + 1
+            tilt[i] = float(line)
+            print(tilt[i])
             time.sleep(0.1)
     time.sleep(0.5)
-    
-    s.write("/getAcc/run\r".encode())
-    line=s.readline() # Read an echo string from K66F terminated with '\n'
-    line2=s.readline() # Read an echo string from K66F terminated with '\n'
-    line3=s.readline() # Read an echo string from K66F terminated with '\n'
-    line4=s.readline() # Read an echo string from K66F terminated with '\n'
-    t = float(line4)
-    if t == 1:
-        for x in range(10):
-            s.write("/getAcc/run\r".encode())
-            line=s.readline() # Read an echo string from K66F terminated with '\n'
-            line2=s.readline() # Read an echo string from K66F terminated with '\n'
-            line3=s.readline() # Read an echo string from K66F terminated with '\n'
-            line4=s.readline() # Read an echo string from K66F terminated with '\n'
-            X[i] = float(line)
-            Y[i] = float(line2)
-            Z[i] = float(line3)
-            tilt[i] = float(line4)
-            i = i + 1
-            time.sleep(0.1)  
-
-    time.sleep(0.5)
+    i = i + 1
 s.close()
 
 fig, ax = plt.subplots(2, 1)
