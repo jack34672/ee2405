@@ -52,9 +52,6 @@ b=bytes("/getAcc/run\r", 'UTF-8')
 c=bytes("/getAddr/run\r", 'UTF-8')
 
 
-X = np.arange(0,1000,1) 
-Y = np.arange(0,1000,1) 
-Z = np.arange(0,1000,1)
 tilt = np.arange(0,1000,1) 
 
 i = 0
@@ -69,21 +66,10 @@ while True:
     # send RPC to remote
     s.write("/getAcc/run\r".encode())
     line = s.readline() # Read an echo string from K66F terminated with '\n'
-    tilt[i] = int(line)
-    print(tilt[i])
-    i = i + 1
-    time.sleep(2.5)
+    print(line)
+    # tilt[i] = int(line)
+    # print(tilt[i])
+    # i = i + 1
+    time.sleep(1.0)
 s.close()
 
-fig, ax = plt.subplots(2, 1)
-l1,=ax[0].plot(t[0:i],X[0:i])
-l2,=ax[0].plot(t[0:i],Y[0:i])
-l3,=ax[0].plot(t[0:i],Z[0:i])
-ax[0].set_xlabel('Time')
-ax[0].set_ylabel('Acc Vector')
-ax[0].legend((l1,l2,l3),('X','Y','Z'))
-ax[1].stem(t[0:i],tilt[0:i],'b') 
-ax[1].set_xlabel('Time')
-ax[1].set_ylabel('Tilt')
-plt.show()
-s.close()
