@@ -54,6 +54,33 @@ c=bytes("/getAddr/run\r", 'UTF-8')
 
 tilt = np.arange(0,1000,1) 
 
+import paho.mqtt.client as paho
+import time
+
+# https://os.mbed.com/teams/mqtt/wiki/Using-MQTT#python-client
+
+# MQTT broker hosted on local machine
+mqttc = paho.Client()
+
+# Settings for connection
+# TODO: revise host to your ip
+host = "172.16.225.90"
+topic = "velocity"
+
+# Callbacks
+def on_connect(self, mosq, obj, rc):
+      print("Connected rc: " + str(rc))
+
+def on_message(mosq, obj, msg):
+      print("[Received] Topic: " + msg.topic + ", Message: " + str(msg.payload) + "\n");
+
+def on_subscribe(mosq, obj, mid, granted_qos):
+      print("Subscribed OK")
+
+def on_unsubscribe(mosq, obj, mid, granted_qos):
+      print("Unsubscribed OK")
+
+
 i = 0
 last = 0
 first = 1
@@ -67,6 +94,7 @@ while last == 0:
     s.write("/getAcc/run\r".encode())
     line = s.readline().decode() # Read an echo string from K66F terminated with '\n'
     if line[0:4] != "/get": 
+        et = mqttc.publish(topic, line, qos=0)
         print(line)
 
     # tilt[i] = int(line)
@@ -76,5 +104,7 @@ while last == 0:
     #     print(line)
     #     last = 1
     time.sleep(0.5)
+
+mqttc.loop_forever()
 s.close()
 

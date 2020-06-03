@@ -63,11 +63,11 @@ float orig_z;
 int tilt = 0;
 int count_time = 0;
 float ho_acc;
-
+char msg[300];
+int send = 0;
 
 void messageArrived(MQTT::MessageData& md) {
       MQTT::Message &message = md.message;
-      char msg[300];
       sprintf(msg, "Message arrived: QoS%d, retained %d, dup %d, packetID %d\r\n", message.qos, message.retained, message.dup, message.id);
       printf(msg);
       wait_ms(1000);
@@ -75,6 +75,7 @@ void messageArrived(MQTT::MessageData& md) {
       sprintf(payload, "Payload %.*s\r\n", message.payloadlen, (char*)message.payload);
       printf(payload);
       ++arrivedcount;
+      send = 1;
 }
 
 void publish_message(MQTT::Client<MQTTNetwork, Countdown>* client, float h) {
@@ -82,6 +83,23 @@ void publish_message(MQTT::Client<MQTTNetwork, Countdown>* client, float h) {
       MQTT::Message message;
       char buff[100];
       sprintf(buff, "%l.4f", h);
+
+      message.qos = MQTT::QOS0;
+      message.retained = false;
+      message.dup = false;
+      message.payload = (void*) buff;
+      message.payloadlen = strlen(buff) + 1;
+      int rc = client->publish(topic, message);
+
+      pc.printf("rc:  %d\r\n", rc);
+      printf("%s\n", buff);
+}
+
+void publish_message2(MQTT::Client<MQTTNetwork, Countdown>* client) {
+      message_num++;
+      MQTT::Message message;
+      char buff[100];
+      sprintf(buff, "%s", msg);
 
       message.qos = MQTT::QOS0;
       message.retained = false;
@@ -234,6 +252,10 @@ int main(){
     ho_acc = sqrt(t[0] * t[0] + t[1] * t[1]) / 10;
     count_time++;
     publish_message(&client, ho_acc);
+    if ( send == 1 ) {
+      send  = 0;
+      publish_message2(&client);
+    }
 
     wait(0.1);
 
