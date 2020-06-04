@@ -134,7 +134,7 @@ int main(){
 
       //TODO: revise host to your ip
 
-      const char* host = "172.17.71.17";
+      const char* host = "192.168.1.113";
       printf("Connecting to TCP network...\r\n");
       int rc = mqttNetwork.connect(host, 1883);
 
@@ -279,7 +279,8 @@ int main(){
               t[2], res[4], res[5]
           );
           publish_message(&client, t);
-          count_time++;
+          
+          count_time += 1;
           wait(0.1);
       }
 
@@ -404,7 +405,7 @@ void getAcc(Arguments *in, Reply *out) {
   //   // publish_message(&client_add, t);
 
     xbee.printf("%d\r\n", count_time);
-    // count_time = 0;
+    count_time = 0;
 }
 
 void getAddr(Arguments *in, Reply *out) {
