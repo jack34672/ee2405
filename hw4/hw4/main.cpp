@@ -134,7 +134,7 @@ int main(){
 
       //TODO: revise host to your ip
 
-      const char* host = "192.168.1.113";
+      const char* host = "192.168.43.186";
       printf("Connecting to TCP network...\r\n");
       int rc = mqttNetwork.connect(host, 1883);
 
