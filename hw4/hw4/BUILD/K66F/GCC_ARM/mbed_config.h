@@ -22,9 +22,9 @@
 #define __MBED_CONFIG_DATA__
 
 // Configuration parameters
-#define MBED_CONF_APP_WIFI_PASSWORD                                           "ray88728"                                                                                       // set by application
+#define MBED_CONF_APP_WIFI_PASSWORD                                           "chen@jack"                                                                                      // set by application
 #define MBED_CONF_APP_WIFI_SHIELD                                             WIFI_ESP8266                                                                                     // set by application
-#define MBED_CONF_APP_WIFI_SSID                                               "ASUS_X01BDA"                                                                                    // set by application
+#define MBED_CONF_APP_WIFI_SSID                                               "Jack_ROG_PhoneII"                                                                               // set by application
 #define MBED_CONF_ATMEL_RF_ASSUME_SPACED_SPI                                  0                                                                                                // set by library:atmel-rf
 #define MBED_CONF_ATMEL_RF_FULL_SPI_SPEED                                     7500000                                                                                          // set by library:atmel-rf
 #define MBED_CONF_ATMEL_RF_FULL_SPI_SPEED_BYTE_SPACING                        250                                                                                              // set by library:atmel-rf

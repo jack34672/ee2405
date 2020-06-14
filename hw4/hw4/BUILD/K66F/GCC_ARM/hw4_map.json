@@ -2,10 +2,10 @@
     {
         "module": "[fill]",
         "size": {
-            ".text": 286,
+            ".text": 284,
             ".data": 12,
             ".bss": 40,
-            ".text-delta": 0,
+            ".text-delta": 1,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -68,10 +68,10 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 6287,
+            ".text": 6292,
             ".data": 12,
             ".bss": 1044,
-            ".text-delta": 0,
+            ".text-delta": -1,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -156,7 +156,7 @@
     {
         "module": "mbed-os/targets",
         "size": {
-            ".text": 14797,
+            ".text": 14794,
             ".data": 36,
             ".bss": 306,
             ".text-delta": 0,
