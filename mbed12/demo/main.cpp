@@ -6,9 +6,9 @@
 
 Serial pc(USBTX, USBRX);
 
-DigitalIn encoder(D4);
+DigitalIn encoder(D3);
 
-PwmOut servo(D8);
+PwmOut servo(D9);
 
 
 Timer t;
