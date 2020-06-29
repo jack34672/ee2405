@@ -1,93 +1,88 @@
-import serial
+import paho.mqtt.client as paho
 
 import time
 
+import serial
+
 import locale
 
-import matplotlib.pyplot as plt
-
-import numpy as np
-
 import threading
+import csv
+mqttc = paho.Client()
 
-# XBee setting
+# Settings for connection
+
+host = "192.168.1.113"
+
+topic= "velocity"
+
+port = 1883
+
+
+# Callbacks
+
+def on_connect(self, mosq, obj, rc):
+
+    print("Connected rc: " + str(rc))
+
+
+def on_message(mosq, obj, msg):
+
+    print("[Received] Topic: " + msg.topic + ", Message: " + str(msg.payload) + "\n")
+
+
+def on_subscribe(mosq, obj, mid, granted_qos):
+
+    print("Subscribed OK")
+
+
+def on_unsubscribe(mosq, obj, mid, granted_qos):
+
+    print("Unsubscribed OK")
+
+
+# Set callbacks
+
+mqttc.on_message = on_message
+
+mqttc.on_connect = on_connect
+
+mqttc.on_subscribe = on_subscribe
+
+mqttc.on_unsubscribe = on_unsubscribe
+
+
+# Connect and subscribe
+
+print("Connecting to " + host + "/" + topic)
+
+#mqttc.connect(host, port=1883, keepalive=60)
+
+#mqttc.subscribe(topic, 0)
 
 serdev = '/dev/ttyUSB0'
 
 s = serial.Serial(serdev, 9600)
 
-
-s.write("+++".encode())
-
-char = s.read(2)
-
-print("Enter AT mode.")
-
-print(char.decode())
+print("start")
 
 
-s.write("ATMY 0x00\r\n".encode())
 
-char = s.read(3)
+x=[]
+with open('log.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    while(1):
 
-print("Set MY 0x00.")
+        line=s.read(1)
 
-print(char.decode())
+        x=line.decode()
 
+        x=locale.atoi(x)
 
-s.write("ATDL 0xFFFF\r\n".encode())
+        #mqttc.publish(topic, x)
 
-char = s.read(3)
-
-print("Set DL 0xFFFF.")
-
-print(char.decode())
-
-
-s.write("ATID 0x4041\r\n".encode())
-
-char = s.read(3)
-
-print("Set PAN ID 0x4041.")
-
-print(char.decode())
-
-
-s.write("ATWR\r\n".encode())
-
-char = s.read(3)
-
-print("Write config.")
-
-print(char.decode())
-
-s.write('ATWR\r\n'.encode())
-
-char = s.read(3)
-
-print('Write config.')
-
-print(char.decode())
-
-
-s.write('ATCN\r\n'.encode())
-
-char = s.read(3)
-
-print('Exit AT mode.')
-
-print(char.decode())
-
-print("start sending RPC")
-
-def job(a1,a2):
-    while 1:
-        line=[]
-        time.sleep(1.1)
-
-thread_get = threading.Thread(target = job, args=(line,line1))
-thread_get.start()
-
-while True:
-    line=s.readline()
-    print(line)
+        print(x)
+        localtime = time.asctime( time.localtime(time.time()) )
+        #mqttc.loop()
+        writer.writerow([localtime, x])
+        time.sleep(0.1)

@@ -13,12 +13,12 @@
     {
         "module": "[fill]",
         "size": {
-            ".text": 221,
+            ".text": 231,
             ".data": 11,
-            ".bss": 40,
-            ".text-delta": 54,
+            ".bss": 44,
+            ".text-delta": 4,
             ".data-delta": 0,
-            ".bss-delta": 7
+            ".bss-delta": 0
         }
     },
     {
@@ -27,7 +27,7 @@
             ".text": 42562,
             ".data": 2472,
             ".bss": 89,
-            ".text-delta": 3554,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -38,7 +38,7 @@
             ".text": 3876,
             ".data": 0,
             ".bss": 0,
-            ".text-delta": 540,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -68,7 +68,7 @@
     {
         "module": "bbcar/bbcar",
         "size": {
-            ".text": 1135,
+            ".text": 1079,
             ".data": 0,
             ".bss": 444,
             ".text-delta": 0,
@@ -90,12 +90,12 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 1930,
+            ".text": 2317,
             ".data": 0,
-            ".bss": 429,
-            ".text-delta": 18,
+            ".bss": 761,
+            ".text-delta": -4,
             ".data-delta": 0,
-            ".bss-delta": 105
+            ".bss-delta": 0
         }
     },
     {
@@ -112,10 +112,21 @@
     {
         "module": "mbed-os/drivers",
         "size": {
-            ".text": 2572,
+            ".text": 2688,
             ".data": 0,
             ".bss": 44,
-            ".text-delta": 1130,
+            ".text-delta": 0,
+            ".data-delta": 0,
+            ".bss-delta": 0
+        }
+    },
+    {
+        "module": "mbed-os/events",
+        "size": {
+            ".text": 1079,
+            ".data": 0,
+            ".bss": 0,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -134,21 +145,21 @@
     {
         "module": "mbed-os/platform",
         "size": {
-            ".text": 8564,
+            ".text": 8574,
             ".data": 261,
             ".bss": 437,
-            ".text-delta": 2044,
+            ".text-delta": 0,
             ".data-delta": 0,
-            ".bss-delta": 88
+            ".bss-delta": 0
         }
     },
     {
         "module": "mbed-os/rtos",
         "size": {
-            ".text": 8832,
+            ".text": 11670,
             ".data": 168,
-            ".bss": 5972,
-            ".text-delta": 238,
+            ".bss": 5980,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -159,17 +170,17 @@
             ".text": 16841,
             ".data": 36,
             ".bss": 310,
-            ".text-delta": 694,
+            ".text-delta": 0,
             ".data-delta": 0,
-            ".bss-delta": 24
+            ".bss-delta": 0
         }
     },
     {
         "summary": {
-            "static_ram": 10888,
-            "static_ram_delta": 224,
-            "total_flash": 92319,
-            "total_flash_delta": 8272
+            "static_ram": 11232,
+            "static_ram_delta": 0,
+            "total_flash": 96703,
+            "total_flash_delta": 0
         }
     }
 ]
